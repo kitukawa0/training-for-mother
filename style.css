@@ -1,0 +1,284 @@
+/* style.css — стили приложения «Календарь домашних тренировок» */
+
+:root {
+  --color-bg: #FAF7F2;
+  --color-surface: #FFFFFF;
+  --color-text: #3A3530;
+  --color-text-muted: #8A8378;
+  --color-primary: #6B9080;
+  --color-primary-dark: #4F7364;
+  --color-primary-light: #E4EDE9;
+  --color-accent: #FF8C69;
+  --color-today: #FFC94D;
+  --color-completed: #7FB685;
+  --color-completed-bg: #E8F4EA;
+  --color-catchup: #F2A65A;
+  --color-locked: #D8D3C8;
+  --color-locked-bg: #F1ECE3;
+  --shadow-soft: 0 10px 30px rgba(58, 53, 48, 0.08);
+  --shadow-hover: 0 14px 34px rgba(58, 53, 48, 0.14);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --font-heading: 'Quicksand', -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Nunito', -apple-system, 'Segoe UI', sans-serif;
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-heading); margin: 0; font-weight: 700; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+button:disabled { cursor: default; }
+
+.app { max-width: 640px; margin: 0 auto; padding: 20px 16px 60px; position: relative; }
+
+/* ---------- Экраны ---------- */
+.screen { display: none; animation: fadeSlideIn var(--transition-medium); }
+.screen--active { display: block; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------- Шапка ---------- */
+.app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
+.app-header__title { display: flex; align-items: center; gap: 10px; }
+.app-header__emoji { font-size: 32px; }
+.app-header h1 { font-size: 22px; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+
+.streak-badge {
+  background: var(--color-surface);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  flex-shrink: 0;
+}
+.icon-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.icon-btn:active { transform: translateY(0); }
+.icon-btn--wide { width: auto; height: auto; border-radius: 999px; padding: 10px 16px; font-size: 14px; font-weight: 700; }
+
+.text-link-btn { color: var(--color-primary-dark); font-weight: 700; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; padding: 4px 0; align-self: flex-start; }
+.text-link-btn:hover { opacity: 0.7; }
+
+/* ---------- Статистика ---------- */
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: var(--color-surface); border-radius: var(--radius-md); padding: 16px; text-align: center; box-shadow: var(--shadow-soft); transition: transform var(--transition-fast); }
+.stat-card:hover { transform: translateY(-3px); }
+.stat-card__icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.stat-card__value { font-family: var(--font-heading); font-size: 26px; font-weight: 700; display: block; color: var(--color-primary-dark); }
+.stat-card__label { font-size: 13px; color: var(--color-text-muted); }
+
+/* ---------- Прогресс ---------- */
+.progress-card { background: var(--color-surface); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-soft); margin-bottom: 16px; }
+.progress-card__header { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 10px; font-size: 15px; }
+.progress-bar { height: 14px; background: var(--color-locked-bg); border-radius: 999px; overflow: hidden; }
+.progress-bar__fill { height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-completed)); border-radius: 999px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ---------- Календарь ---------- */
+.calendar-card { background: var(--color-surface); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-soft); }
+.calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.calendar-nav h2 { font-size: 19px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.calendar-weekday { text-align: center; font-size: 12px; font-weight: 700; color: var(--color-text-muted); padding-bottom: 6px; }
+
+.calendar-day {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  background: var(--color-locked-bg);
+  color: var(--color-text-muted);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.calendar-day--empty { background: transparent; }
+.calendar-day--before-start { background: transparent; opacity: 0.3; box-shadow: none; }
+.calendar-day--completed { background: var(--color-completed-bg); color: var(--color-primary-dark); }
+.calendar-day--today {
+  background: var(--color-today);
+  color: #5A4300;
+  box-shadow: 0 0 0 3px rgba(255, 201, 77, 0.35);
+  animation: pulseToday 2.4s ease-in-out infinite;
+}
+.calendar-day--catch-up { background: var(--color-catchup); color: #5A3300; }
+.calendar-day--future, .calendar-day--locked { opacity: 0.55; }
+.calendar-day__icon { font-size: 12px; margin-top: 2px; }
+
+button.calendar-day:not(:disabled):hover { transform: translateY(-3px) scale(1.04); box-shadow: var(--shadow-hover); }
+
+@keyframes pulseToday {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255, 201, 77, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 201, 77, 0.15); }
+}
+
+.calendar-footer { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.calendar-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--color-text-muted); }
+.calendar-legend span { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-dot--completed { background: var(--color-completed); }
+.legend-dot--today { background: var(--color-today); }
+.legend-dot--future { background: var(--color-locked); }
+
+/* ---------- Экран выбора сложности ---------- */
+.difficulty-panel { background: var(--color-surface); border-radius: var(--radius-lg); padding: 28px 22px; box-shadow: var(--shadow-soft); text-align: center; position: relative; margin-top: 40px; }
+.back-btn { position: absolute; left: 16px; top: 16px; }
+.difficulty-panel h2 { font-size: 22px; margin-bottom: 6px; margin-top: 12px; }
+.difficulty-subtitle { color: var(--color-text-muted); margin-bottom: 22px; }
+.difficulty-options { display: flex; flex-direction: column; gap: 14px; }
+.difficulty-card { border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform var(--transition-fast), box-shadow var(--transition-fast); box-shadow: var(--shadow-soft); }
+.difficulty-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+.difficulty-card--easy { background: var(--color-primary-light); }
+.difficulty-card--hard { background: #FFEAE0; }
+.difficulty-card__icon { font-size: 36px; }
+.difficulty-card__title { font-family: var(--font-heading); font-size: 20px; font-weight: 700; }
+.difficulty-card__desc { font-size: 14px; color: var(--color-text-muted); text-align: center; }
+.difficulty-card__duration { font-size: 12px; color: var(--color-text-muted); font-weight: 700; margin-top: 2px; }
+
+/* ---------- Экран тренировки ---------- */
+.workout-header { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 16px; gap: 8px; }
+.workout-counter { font-weight: 700; color: var(--color-text-muted); font-size: 13px; text-align: center; flex: 1; }
+.workout-progress-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-locked); transition: background var(--transition-fast), transform var(--transition-fast); }
+.progress-dot--done { background: var(--color-completed); }
+.progress-dot--active { background: var(--color-accent); transform: scale(1.4); }
+
+.exercise-card { background: var(--color-surface); border-radius: var(--radius-lg); padding: 24px 20px; box-shadow: var(--shadow-soft); text-align: center; animation: fadeSlideIn var(--transition-medium); }
+.exercise-card__name { font-size: 24px; margin-bottom: 10px; }
+.exercise-card__equipment { display: inline-block; background: var(--color-primary-light); color: var(--color-primary-dark); padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+
+.exercise-media { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--radius-md); overflow: hidden; background: var(--color-primary-light); margin-bottom: 16px; }
+.exercise-media__video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity var(--transition-medium); }
+.exercise-media__video.is-visible { opacity: 1; }
+.exercise-media__fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px; text-align: center; opacity: 0; transition: opacity var(--transition-medium); }
+.exercise-media__fallback.is-visible { opacity: 1; }
+.exercise-media__icon { font-size: 56px; }
+.exercise-media__hint { font-size: 13px; color: var(--color-text-muted); }
+
+.exercise-card__desc { color: var(--color-text-muted); margin-bottom: 18px; font-size: 15px; }
+
+.timer-wrap { position: relative; width: 160px; height: 160px; margin: 0 auto 14px; }
+.timer-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-ring__bg { fill: none; stroke: var(--color-locked-bg); stroke-width: 10; }
+.timer-ring__progress { fill: none; stroke: var(--color-accent); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.timer-ring__label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 40px; font-weight: 700; color: var(--color-primary-dark); }
+
+.auto-advance-hint { min-height: 20px; color: var(--color-accent); font-weight: 700; font-size: 14px; }
+.workout-actions { display: flex; gap: 10px; margin-top: 10px; }
+
+.btn { flex: 1; padding: 14px 18px; border-radius: 999px; font-weight: 700; font-size: 15px; transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast); }
+.btn--primary { background: var(--color-primary); color: #fff; box-shadow: var(--shadow-soft); opacity: 0; pointer-events: none; }
+.btn--primary.is-visible { opacity: 1; pointer-events: auto; }
+.btn--primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.btn--ghost { background: var(--color-locked-bg); color: var(--color-text); }
+.btn--ghost:hover { background: var(--color-locked); }
+
+/* ---------- Экран завершения ---------- */
+.complete-panel { background: var(--color-surface); border-radius: var(--radius-lg); padding: 50px 24px; text-align: center; box-shadow: var(--shadow-soft); margin-top: 60px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+.complete-emoji { font-size: 64px; margin-bottom: 12px; animation: bounce 1.4s ease-in-out infinite; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.complete-panel h2 { font-size: 26px; margin-bottom: 8px; }
+.complete-panel p { color: var(--color-text-muted); margin-bottom: 24px; }
+.complete-panel .btn--primary { opacity: 1; pointer-events: auto; width: 100%; }
+.confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px);
+  background: var(--color-text); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm);
+  font-size: 14px; max-width: 90%; opacity: 0;
+  transition: opacity var(--transition-medium), transform var(--transition-medium);
+  pointer-events: none; z-index: 60;
+}
+.toast--visible { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* ==================================================================
+   АДАПТИВНОСТЬ: телефоны, планшеты, компьютеры и телевизоры
+   ================================================================== */
+
+/* Маленькие телефоны */
+@media (max-width: 380px) {
+  html, body { font-size: 16px; }
+  .app { padding: 14px 10px 50px; }
+  .stat-card__value { font-size: 22px; }
+  .app-header h1 { font-size: 19px; }
+}
+
+/* Планшеты и телефоны в альбомной ориентации */
+@media (min-width: 640px) {
+  .app { max-width: 720px; }
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  .difficulty-options { flex-direction: row; }
+  .difficulty-card { flex: 1; }
+}
+
+/* Ноутбуки и настольные компьютеры */
+@media (min-width: 1024px) {
+  .app { max-width: 920px; padding-top: 40px; }
+  .app-header h1 { font-size: 26px; }
+  .calendar-day { font-size: 17px; }
+  .exercise-card { padding: 36px; }
+  .timer-wrap { width: 190px; height: 190px; }
+}
+
+/* Большие мониторы */
+@media (min-width: 1440px) {
+  .app { max-width: 1080px; }
+  html, body { font-size: 19px; }
+}
+
+/* Телевизоры и очень большие экраны — просмотр с дивана, крупный текст и кнопки */
+@media (min-width: 1920px) {
+  html, body { font-size: 26px; }
+  .app { max-width: 1400px; padding-top: 60px; }
+  .icon-btn { width: 60px; height: 60px; font-size: 26px; }
+  .icon-btn--wide { padding: 16px 26px; font-size: 22px; }
+  .stat-card { padding: 26px; }
+  .stat-card__value { font-size: 40px; }
+  .timer-wrap { width: 260px; height: 260px; }
+  .btn { padding: 20px 26px; font-size: 20px; }
+  .exercise-card__name { font-size: 34px; }
+  .difficulty-card__icon { font-size: 52px; }
+  .streak-badge { padding: 12px 20px; font-size: 20px; }
+}
+
+/* 4K-телевизоры */
+@media (min-width: 2560px) {
+  html, body { font-size: 32px; }
+  .app { max-width: 1700px; }
+}

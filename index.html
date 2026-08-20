@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Календарь домашних тренировок</title>
+<meta name="description" content="Лёгкие домашние тренировки каждый день — календарь, таймер и прогресс." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧘</text></svg>" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ЭКРАН: КАЛЕНДАРЬ -->
+  <section id="screen-calendar" class="screen screen--active">
+    <header class="app-header">
+      <div class="app-header__title">
+        <span class="app-header__emoji">🧘‍♀️</span>
+        <h1>Календарь домашних тренировок</h1>
+      </div>
+      <div class="header-actions">
+        <div class="streak-badge" title="Текущая серия">🔥 <span id="streakBadgeValue">0</span></div>
+        <button id="soundToggleBtn" class="icon-btn" type="button" aria-label="Включить или выключить звук">🔊</button>
+      </div>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-card__icon">✅</span><span class="stat-card__value" id="statTotal">0</span><span class="stat-card__label">Всего тренировок</span></div>
+      <div class="stat-card"><span class="stat-card__icon">🔥</span><span class="stat-card__value" id="statStreak">0</span><span class="stat-card__label">Текущая серия</span></div>
+      <div class="stat-card"><span class="stat-card__icon">🏆</span><span class="stat-card__value" id="statBest">0</span><span class="stat-card__label">Лучшая серия</span></div>
+      <div class="stat-card"><span class="stat-card__icon">📅</span><span class="stat-card__value" id="statLast">—</span><span class="stat-card__label">Последняя тренировка</span></div>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-card__header"><span>Выполнено тренировок в этом месяце</span><span id="progressBarLabel">0%</span></div>
+      <div class="progress-bar"><div class="progress-bar__fill" id="progressBarFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="calendar-card">
+      <div class="calendar-nav">
+        <button id="prevMonthBtn" class="icon-btn" type="button" aria-label="Предыдущий месяц">‹</button>
+        <h2 id="calendarMonthLabel">Месяц</h2>
+        <button id="nextMonthBtn" class="icon-btn" type="button" aria-label="Следующий месяц">›</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+      <div class="calendar-footer">
+        <button id="todayBtn" class="text-link-btn" type="button">К сегодняшнему дню</button>
+        <div class="calendar-legend">
+          <span><i class="legend-dot legend-dot--completed"></i>Выполнено</span>
+          <span><i class="legend-dot legend-dot--today"></i>Сегодня</span>
+          <span><i class="legend-dot legend-dot--future"></i>Будущее</span>
+          <span>🔒 Недоступно</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЭКРАН: ВЫБОР СЛОЖНОСТИ -->
+  <section id="screen-difficulty" class="screen">
+    <div class="difficulty-panel">
+      <button id="cancelDifficultyBtn" class="icon-btn back-btn" type="button" aria-label="Назад">←</button>
+      <h2>Тренировка на <span id="difficultyDateLabel">сегодня</span></h2>
+      <p class="difficulty-subtitle">Какую нагрузку хотите сегодня?</p>
+      <div class="difficulty-options">
+        <button id="chooseEasyBtn" class="difficulty-card difficulty-card--easy" type="button">
+          <span class="difficulty-card__icon">🌿</span>
+          <span class="difficulty-card__title">Лёгкая</span>
+          <span class="difficulty-card__desc">Без инвентаря, в своём темпе</span>
+          <span class="difficulty-card__duration" id="easyDurationHint">≈ 8 мин</span>
+        </button>
+        <button id="chooseHardBtn" class="difficulty-card difficulty-card--hard" type="button">
+          <span class="difficulty-card__icon">🔥</span>
+          <span class="difficulty-card__title">Тяжёлая</span>
+          <span class="difficulty-card__desc">С гантелями и резинкой</span>
+          <span class="difficulty-card__duration" id="hardDurationHint">≈ 9 мин</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЭКРАН: ТРЕНИРОВКА -->
+  <section id="screen-workout" class="screen">
+    <div class="workout-panel">
+      <div class="workout-header">
+        <button id="exitWorkoutBtn" class="icon-btn" type="button" aria-label="Завершить позже">✕</button>
+        <span id="exerciseCounter" class="workout-counter">Круг 1 из 1 · Упражнение 1 из 1</span>
+        <button id="pauseExerciseBtn" class="icon-btn icon-btn--wide" type="button">⏸️ Пауза</button>
+      </div>
+
+      <div class="workout-progress-dots" id="workoutProgressDots"></div>
+
+      <div class="exercise-card">
+        <h2 id="exerciseName" class="exercise-card__name" aria-live="polite">Название</h2>
+        <p id="exerciseEquipment" class="exercise-card__equipment" hidden></p>
+
+        <div class="exercise-media">
+          <video id="exerciseVideo" class="exercise-media__video" autoplay muted loop playsinline controls></video>
+          <div id="exerciseVideoFallback" class="exercise-media__fallback">
+            <span id="exerciseIconFallback" class="exercise-media__icon">🏃</span>
+            <span class="exercise-media__hint">Видео появится здесь, когда вы его добавите</span>
+          </div>
+        </div>
+
+        <p id="exerciseDescription" class="exercise-card__desc">Описание</p>
+
+        <div class="timer-wrap" id="timerContainer"></div>
+
+        <p id="autoAdvanceHint" class="auto-advance-hint"></p>
+
+        <div class="workout-actions">
+          <button id="skipExerciseBtn" class="btn btn--ghost" type="button">Пропустить</button>
+          <button id="nextExerciseBtn" class="btn btn--primary" type="button">Следующее упражнение →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЭКРАН: ЗАВЕРШЕНИЕ -->
+  <section id="screen-complete" class="screen">
+    <div class="complete-panel">
+      <div class="complete-emoji">🎉</div>
+      <h2>Отличная работа!</h2>
+      <p>Сегодняшняя тренировка завершена!</p>
+      <button id="finishCompleteBtn" class="btn btn--primary" type="button">Вернуться в календарь</button>
+    </div>
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+  </section>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script src="utils.js" defer></script>
+<script src="storage.js" defer></script>
+<script src="workouts.js" defer></script>
+<script src="timer.js" defer></script>
+<script src="calendar.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>
