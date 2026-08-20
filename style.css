@@ -67,9 +67,9 @@ button:disabled { cursor: default; }
   align-items: center;
   gap: 4px;
 }
-.mem{
-    display: block;
-    font-size: smaller;
+.mem {
+    font-size: 14px;
+    margin-top: -15px;
 }
 
   
