@@ -67,7 +67,12 @@ button:disabled { cursor: default; }
   align-items: center;
   gap: 4px;
 }
+.mem{
+    display: block;
+    font-size: smaller;
+}
 
+  
 .icon-btn {
   width: 44px;
   height: 44px;
